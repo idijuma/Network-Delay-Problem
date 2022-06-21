@@ -1,0 +1,33 @@
+class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+        // Step 1: Initialize distances from src to all other 
+        // vertices as INFINITE 
+        // src will have distance as 0
+        int[] leastTimes = new int[n + 1];
+        Arrays.fill(leastTimes, Integer.MAX_VALUE);
+        leastTimes[k] = 0;
+        // Step 2: Relax all edges |V| - 1 times. A simple 
+        // shortest path from src to any other vertex can 
+        // have at-most |V| - 1 edges 
+        for (int i = 1; i< n; i++) {
+            for(int[] time : times) {
+                int u = time[0], v = time[1], w = time[2];
+                if (leastTimes[u] != Integer.MAX_VALUE && leastTimes[v] > leastTimes[u] + w) {
+                    leastTimes[v] = leastTimes[u] + w;
+                }
+            }
+        }
+        // check to see if any of the distances are MAX_VALUE, this will
+        // show that the node was never relaxed so return -1
+        int delay = 0;
+        for (int i = 1; i< leastTimes.length; i++) {
+            if (leastTimes[i] == Integer.MAX_VALUE) {
+                return -1;
+            }
+            if (leastTimes[i] > delay) {
+                delay = leastTimes[i];
+            }
+        }
+        return delay;
+    }
+}
